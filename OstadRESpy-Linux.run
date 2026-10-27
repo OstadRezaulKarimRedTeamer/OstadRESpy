@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$DIR"
+chmod +x run_linux_gui.sh run_ostadrespy.sh run_bitdiff.sh 2>/dev/null
+echo "=============================================================================="
+echo "  🛡️ OstadRESpy Self-Executing Cyber Defense Bundle [Linux .run]"
+echo "  Created by: Ostad Rezaul Karim (Director, Ostad Red Team Forge)"
+echo "=============================================================================="
+which python3 >/dev/null 2>&1 || { echo "[ERROR] Python 3 is required. Please install python3"; exit 1; }
+echo "[*] Opening Cyberpunk Forensic HUD..."
+python3 gui_server.py

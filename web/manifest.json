@@ -1,0 +1,15 @@
+{
+  "name": "OstadRESpy Cyber Defense Suite",
+  "short_name": "OstadRESpy",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090e",
+  "theme_color": "#ff0055",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

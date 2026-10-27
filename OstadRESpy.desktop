@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=OstadRESpy
+Comment=Universal 10-Layer Cyber Defense Suite & Reverse Engineering Matrix
+Exec=bash -c "cd $(dirname %k) && ./run_linux_gui.sh"
+Icon=logo.jpg
+Terminal=true
+Categories=Security;Development;Forensics;

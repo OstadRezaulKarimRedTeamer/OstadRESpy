@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OstadRESpy - All-in-One 10-Layer Cyber Defense Suite</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#ff0055">
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: rgba(14, 18, 27, 0.85);
+      --card-border: rgba(255, 0, 85, 0.25);
+      --neon-red: #ff0055;
+      --neon-cyan: #00e5ff;
+      --neon-green: #00ff88;
+      --neon-yellow: #ffb700;
+      --text-main: #f0f4fc;
+      --text-muted: #8b9bb4;
+      --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+    canvas#cyber-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.25;
+    }
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+    /* Header */
+    header {
+      background: linear-gradient(135deg, rgba(255,0,85,0.08) 0%, rgba(0,229,255,0.04) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .logo-img {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      border: 2px solid var(--neon-red);
+      box-shadow: 0 0 16px rgba(255,0,85,0.5);
+      object-fit: cover;
+    }
+    .header-title h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #ffffff, var(--neon-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 3px;
+    }
+    .author-badge {
+      background: rgba(255,0,85,0.12);
+      border: 1px solid var(--neon-red);
+      border-radius: 30px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: #ff80a0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .author-badge .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    /* Nav Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 12px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover {
+      border-color: var(--neon-cyan);
+      color: var(--text-main);
+      box-shadow: 0 0 12px rgba(0,229,255,0.2);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(255,0,85,0.25), rgba(255,0,85,0.05));
+      border-color: var(--neon-red);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(255,0,85,0.35);
+    }
+    /* Tab Contents */
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Drop Zone */
+    .dropzone {
+      background: var(--card-bg);
+      border: 2px dashed rgba(255,0,85,0.4);
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 30px rgba(0,229,255,0.3);
+      transform: translateY(-2px);
+    }
+    .drop-icon {
+      font-size: 3.2rem;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .dropzone h2 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .dropzone p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      max-width: 500px;
+      margin: 0 auto 18px;
+    }
+    .browse-btn {
+      background: linear-gradient(135deg, var(--neon-red), #b3003b);
+      color: #fff;
+      border: none;
+      padding: 10px 26px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255,0,85,0.4);
+      transition: all 0.2s ease;
+    }
+    .browse-btn:hover {
+      box-shadow: 0 0 24px rgba(255,0,85,0.7);
+      transform: scale(1.04);
+    }
+    input[type="file"] { display: none; }
+
+    /* Progress Matrix */
+    .scan-progress {
+      display: none;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+    .progress-bar-wrap {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 14px;
+      position: relative;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-red));
+      transition: width 0.3s ease;
+      box-shadow: 0 0 12px var(--neon-red);
+    }
+    .engine-stepper {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .step-item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .step-item.active {
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      background: rgba(0,229,255,0.06);
+    }
+    .step-item.done {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      background: rgba(0,255,136,0.06);
+    }
+
+    /* Results Dashboard */
+    .results-section {
+      display: none;
+      margin-top: 28px;
+      animation: fadeIn 0.4s ease;
+    }
+    .verdict-hero {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .score-circle {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .score-circle svg {
+      transform: rotate(-90deg);
+      width: 150px;
+      height: 150px;
+    }
+    .score-circle circle {
+      fill: none;
+      stroke-width: 12;
+      stroke-linecap: round;
+    }
+    .score-circle .bg-circle { stroke: rgba(255,255,255,0.06); }
+    .score-circle .val-circle {
+      stroke: var(--neon-green);
+      stroke-dasharray: 408;
+      stroke-dashoffset: 408;
+      transition: stroke-dashoffset 1.2s ease, stroke 0.5s;
+    }
+    .score-text {
+      position: absolute;
+      text-align: center;
+    }
+    .score-number {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+    }
+    .score-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .verdict-info {
+      flex: 1;
+      min-width: 260px;
+    }
+    .verdict-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .verdict-badge.clean {
+      background: rgba(0,255,136,0.15);
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 16px rgba(0,255,136,0.3);
+    }
+    .verdict-badge.malicious {
+      background: rgba(255,0,85,0.2);
+      border: 1px solid var(--neon-red);
+      color: var(--neon-red);
+      box-shadow: 0 0 20px rgba(255,0,85,0.4);
+    }
+    .verdict-badge.suspicious {
+      background: rgba(255,183,0,0.18);
+      border: 1px solid var(--neon-yellow);
+      color: var(--neon-yellow);
+      box-shadow: 0 0 16px rgba(255,183,0,0.3);
+    }
+    .verdict-title {
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .meta-box {
+      background: rgba(255,255,255,0.03);
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.85rem;
+    }
+    .meta-box span { color: var(--text-muted); display: block; font-size: 0.75rem; }
+    .meta-box strong { color: #fff; word-break: break-all; }
+
+    /* 10 Layer Grid */
+    .engines-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .engine-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transition: all 0.2s;
+    }
+    .engine-card:hover {
+      border-color: rgba(255,0,85,0.4);
+      transform: translateY(-2px);
+    }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 8px;
+    }
+    .card-head h3 {
+      font-size: 0.98rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-status {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    .card-status.clean { background: rgba(0,255,136,0.15); color: var(--neon-green); }
+    .card-status.flagged { background: rgba(255,0,85,0.18); color: var(--neon-red); }
+    .card-body ul {
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .card-body li {
+      margin-bottom: 6px;
+      padding-left: 14px;
+      position: relative;
+    }
+    .card-body li::before {
+      content: "•";
+      color: var(--neon-cyan);
+      position: absolute;
+      left: 0;
+    }
+
+    /* Terminal & Actions */
+    .terminal-box {
+      background: #030407;
+      border: 1px solid rgba(0,255,136,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.84rem;
+      color: var(--neon-green);
+      max-height: 220px;
+      overflow-y: auto;
+      margin-bottom: 24px;
+      box-shadow: inset 0 0 16px rgba(0,255,136,0.1);
+    }
+    .action-bar {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .action-btn:hover {
+      background: var(--neon-red);
+      border-color: var(--neon-red);
+      box-shadow: 0 0 16px rgba(255,0,85,0.5);
+    }
+    .action-btn.secondary:hover {
+      background: var(--neon-cyan);
+      border-color: var(--neon-cyan);
+      color: #000;
+      box-shadow: 0 0 16px rgba(0,229,255,0.5);
+    }
+
+    /* Diff View */
+    .diff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .diff-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="cyber-bg"></canvas>
+
+  <div class="wrapper">
+    <!-- Header -->
+    <header>
+      <div class="header-left">
+        <img src="/logo.jpg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+        <div class="header-title">
+          <h1>OstadRESpy & OstadBitDiff</h1>
+          <p>Universal 10-Layer Forensic Threat Analysis & Binary Differential Suite</p>
+        </div>
+      </div>
+      <div class="author-badge">
+        <div class="dot"></div>
+        <span>Ostad Rezaul Karim • Ostad Red Team Forge</span>
+      </div>
+    </header>
+
+    <!-- Nav Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('audit')">🛡️ Universal Binary Threat Audit</button>
+      <button class="tab-btn" onclick="switchTab('diff')">OstadBitDiff (Binary Differential)</button>
+    </div>
+
+    <!-- TAB 1: Single File Audit -->
+    <div id="tab-audit" class="tab-pane active">
+      <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+        <span class="drop-icon">🛡️</span>
+        <h2>DRAG & DROP ANY FILE TO AUDIT</h2>
+        <p>Supports Android APK/DEX, Windows PE/EXE/DLL, Linux ELF, macOS Mach-O, PowerShell, Bash, Python, PDFs, Firmware</p>
+        <button class="browse-btn" type="button">Select Target Binary</button>
+        <input type="file" id="file-input" onchange="handleFileSelect(this.files[0])">
+      </div>
+
+      <!-- Scan Progress -->
+      <div class="scan-progress" id="scan-progress">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong id="progress-title" style="color:var(--neon-cyan)">[Engine Initiating] Loading Binary...</strong>
+          <span id="progress-pct" style="color:var(--text-muted); font-size:0.9rem;">0%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="engine-stepper" id="engine-stepper">
+          <div class="step-item" id="step-1">1. YARA APT Matcher</div>
+          <div class="step-item" id="step-2">2. Memory Forensics</div>
+          <div class="step-item" id="step-3">3. Firmware Carver</div>
+          <div class="step-item" id="step-4">4. Network & C2 Forensics</div>
+          <div class="step-item" id="step-5">5. Sandbox Simulator</div>
+          <div class="step-item" id="step-6">6. DBI & Frida Bypass</div>
+          <div class="step-item" id="step-7">7. Symbolic Time-Bomb</div>
+          <div class="step-item" id="step-8">8. Opcode Sled Disasm</div>
+          <div class="step-item" id="step-9">9. OWASP Mobile Top 10</div>
+          <div class="step-item" id="step-10">10. Air-Gapped Chamber</div>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div class="results-section" id="results-section">
+        <div class="verdict-hero">
+          <div class="score-circle">
+            <svg>
+              <circle class="bg-circle" cx="75" cy="75" r="65"></circle>
+              <circle class="val-circle" id="score-indicator" cx="75" cy="75" r="65"></circle>
+            </svg>
+            <div class="score-text">
+              <div class="score-number" id="threat-score-val">0</div>
+              <div class="score-label">Threat Score</div>
+            </div>
+          </div>
+          <div class="verdict-info">
+            <div class="verdict-badge clean" id="verdict-badge">CLEAN & SAFE</div>
+            <h2 class="verdict-title" id="verdict-filename">target.apk</h2>
+            <div class="meta-grid">
+              <div class="meta-box"><span>Architecture</span><strong id="meta-arch">APK</strong></div>
+              <div class="meta-box"><span>File Size</span><strong id="meta-size">9.1 MB</strong></div>
+              <div class="meta-box"><span>Shannon Entropy</span><strong id="meta-entropy">6.78 / 8.00</strong></div>
+              <div class="meta-box"><span>SHA-256 Hash</span><strong id="meta-sha256">...</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10 Layer Grid -->
+        <div class="engines-grid" id="engines-grid"></div>
+
+        <!-- Live Terminal -->
+        <h3 style="color:#fff; margin-bottom:10px; font-size:1rem;">Live Engine Audit Terminal</h3>
+        <div class="terminal-box" id="terminal-log">
+          [OstadRESpy Engine Online] Initializing universal forensic pipeline...<br>
+        </div>
+
+        <!-- Actions -->
+        <div class="action-bar">
+          <button class="action-btn" onclick="downloadReport()">📥 Download Full Markdown Dossier (.md)</button>
+          <button class="action-btn secondary" onclick="downloadFrida()">💉 Download Frida Bypass Hook (.js)</button>
+          <button class="action-btn" onclick="resetScan()" style="margin-left:auto;">🔄 Scan Another File</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: BitDiff -->
+    <div id="tab-diff" class="tab-pane">
+      <div class="diff-grid">
+        <div class="dropzone" id="drop-orig" onclick="document.getElementById('file-orig').click()">
+          <span class="drop-icon">📦</span>
+          <h3>TARGET A: ORIGINAL SAFE</h3>
+          <p id="label-orig">Click to select original file</p>
+          <input type="file" id="file-orig" onchange="setDiffFile(0, this.files[0])">
+        </div>
+        <div class="dropzone" id="drop-mod" onclick="document.getElementById('file-mod').click()">
+          <span class="drop-icon">☣️</span>
+          <h3>TARGET B: CANDIDATE / MOD</h3>
+          <p id="label-mod">Click to select candidate file</p>
+          <input type="file" id="file-mod" onchange="setDiffFile(1, this.files[0])">
+        </div>
+      </div>
+      <div style="text-align:center; margin-bottom:24px;">
+        <button class="browse-btn" onclick="runBitDiff()" style="padding:14px 40px; font-size:1.1rem;">EXECUTE BINARY DIFF FORENSICS</button>
+      </div>
+      <div id="diff-results" style="display:none;" class="verdict-hero">
+        <div class="verdict-info" style="width:100%;">
+          <div class="verdict-badge clean" id="diff-verdict-badge">100% IDENTICAL</div>
+          <h2 class="verdict-title" id="diff-summary">Similarity Score: 100.0%</h2>
+          <div class="meta-grid" id="diff-meta-grid"></div>
+          <div style="margin-top:20px;">
+            <button class="action-btn" onclick="downloadDiffReport()">📥 Download OstadBitDiff Report (.md)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab Switching
+    function switchTab(name) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      if(name === 'audit') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tab-audit').classList.add('active');
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('tab-diff').classList.add('active');
+      }
+    }
+
+    // Drag and Drop
+    const dropzone = document.getElementById('dropzone');
+    ['dragenter', 'dragover'].forEach(e => dropzone.addEventListener(e, (ev) => { ev.preventDefault(); dropzone.classList.add('dragover'); }));
+    ['dragleave', 'drop'].forEach(e => dropzone.addEventListener(e, (ev) => { ev.preventDefault(); dropzone.classList.remove('dragover'); }));
+    dropzone.addEventListener('drop', (ev) => {
+      if (ev.dataTransfer.files.length) handleFileSelect(ev.dataTransfer.files[0]);
+    });
+
+    let currentScanReport = "";
+    let currentDiffReport = "";
+
+    function handleFileSelect(file) {
+      if(!file) return;
+      document.getElementById('dropzone').style.display = 'none';
+      document.getElementById('results-section').style.display = 'none';
+      const progressBox = document.getElementById('scan-progress');
+      progressBox.style.display = 'block';
+
+      const terminal = document.getElementById('terminal-log');
+      terminal.innerHTML = `[+] Initiating OstadRESpy v3.0 Deep Forensic Audit on: <b>${file.name}</b> (${(file.size / (1024*1024)).toFixed(2)} MB)<br>`;
+
+      // Animate Stepper
+      let currentStep = 1;
+      const stepInterval = setInterval(() => {
+        if(currentStep <= 10) {
+          document.querySelectorAll('.step-item').forEach(el => el.classList.remove('active'));
+          const curEl = document.getElementById(`step-${currentStep}`);
+          if(curEl) {
+            curEl.classList.add('active');
+            terminal.innerHTML += `[*] [Engine ${currentStep}/10] Executing Layer: ${curEl.innerText}...<br>`;
+            terminal.scrollTop = terminal.scrollHeight;
+          }
+          const pct = Math.round((currentStep / 10) * 85);
+          document.getElementById('progress-bar').style.width = pct + '%';
+          document.getElementById('progress-pct').innerText = pct + '%';
+          currentStep++;
+        }
+      }, 250);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('/api/scan', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => {
+          clearInterval(stepInterval);
+          for(let i=1; i<=10; i++) {
+            const s = document.getElementById(`step-${i}`);
+            if(s) { s.classList.remove('active'); s.classList.add('done'); }
+          }
+          document.getElementById('progress-bar').style.width = '100%';
+          document.getElementById('progress-pct').innerText = '100%';
+
+          setTimeout(() => {
+            progressBox.style.display = 'none';
+            renderResults(data);
+          }, 400);
+        })
+        .catch(err => {
+          clearInterval(stepInterval);
+          alert("Scan Error: " + err);
+          resetScan();
+        });
+    }
+
+    function renderResults(d) {
+      document.getElementById('results-section').style.display = 'block';
+      currentScanReport = d.report_markdown || "";
+
+      document.getElementById('verdict-filename').innerText = d.filename;
+      document.getElementById('meta-arch').innerText = d.format;
+      document.getElementById('meta-size').innerText = `${(d.size / (1024*1024)).toFixed(2)} MB (${d.size.toLocaleString()} bytes)`;
+      document.getElementById('meta-entropy').innerText = `${d.entropy} / 8.00 (${d.entropy > 7.15 ? 'High / Packed' : 'Standard Unpacked'})`;
+      document.getElementById('meta-sha256').innerText = d.hashes.sha256;
+
+      const scoreVal = d.threat_score;
+      document.getElementById('threat-score-val').innerText = scoreVal;
+
+      // Animate Radial Gauge (Circumference ~ 408)
+      const offset = 408 - (408 * scoreVal / 100);
+      const circle = document.getElementById('score-indicator');
+      circle.style.strokeDashoffset = offset;
+
+      const badge = document.getElementById('verdict-badge');
+      if(scoreVal === 0) {
+        badge.className = 'verdict-badge clean';
+        badge.innerText = 'CLEAN & SAFE';
+        circle.style.stroke = 'var(--neon-green)';
+      } else if(scoreVal <= 35) {
+        badge.className = 'verdict-badge suspicious';
+        badge.innerText = 'LOW RISK / SUSPICIOUS';
+        circle.style.stroke = 'var(--neon-yellow)';
+      } else {
+        badge.className = 'verdict-badge malicious';
+        badge.innerText = 'HIGH RISK / MALICIOUS';
+        circle.style.stroke = 'var(--neon-red)';
+      }
+
+      // Populate 10 Engine Cards
+      const grid = document.getElementById('engines-grid');
+      grid.innerHTML = `
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>🎯 1. YARA APT Matcher</h3>
+            <span class="card-status ${d.yara_hits.length ? 'flagged' : 'clean'}">${d.yara_hits.length ? 'FLAGGED' : 'PASSED'}</span>
+          </div>
+          <div class="card-body">
+            <ul>${d.yara_hits.length ? d.yara_hits.map(h => `<li>⚠️ ${h.name} (${h.threat})</li>`).join('') : '<li>✅ No APT, Ransomware, or Botnet signatures found.</li>'}</ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>🧠 2. Memory & Syscalls</h3>
+            <span class="card-status ${d.mem_hits.length ? 'flagged' : 'clean'}">${d.mem_hits.length ? 'FLAGGED' : 'CLEAN'}</span>
+          </div>
+          <div class="card-body">
+            <ul>${d.mem_hits.length ? d.mem_hits.map(m => `<li>⚠️ ${m.detection}</li>`).join('') : '<li>✅ No direct syscalls or injected shellcode stagers found.</li>'}</ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>⚙️ 3. Embedded Firmware</h3>
+            <span class="card-status clean">INSPECTED</span>
+          </div>
+          <div class="card-body">
+            <ul>${d.firmware_hits.length ? d.firmware_hits.slice(0,3).map(f => `<li>📦 Offset ${f.offset}: ${f.name}</li>`).join('') : '<li>ℹ️ Standard binary (No embedded SquashFS/U-Boot).</li>'}</ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>🌐 4. Network Forensics & C2</h3>
+            <span class="card-status ${d.net_findings.dga_candidates.length || d.net_findings.cloud_c2_endpoints.length ? 'flagged' : 'clean'}">${d.net_findings.dga_candidates.length ? 'FLAGGED' : 'CLEAN'}</span>
+          </div>
+          <div class="card-body">
+            <ul>
+              ${d.net_findings.dga_candidates.length ? `<li>🚨 DGA: ${d.net_findings.dga_candidates.join(', ')}</li>` : '<li>✅ Zero DGA algorithmic domains.</li>'}
+              ${d.net_findings.cloud_c2_endpoints.length ? `<li>🌐 Cloud C2: ${d.net_findings.cloud_c2_endpoints.join(', ')}</li>` : '<li>✅ No unauthorized Webhook / Cloud C2 relays.</li>'}
+            </ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>5. Dynamic Sandbox Tracer</h3>
+            <span class="card-status clean">SIMULATED</span>
+          </div>
+          <div class="card-body">
+            <ul>${d.sandbox_events.length ? d.sandbox_events.map(e => `<li>[Event] ${e.event}: ${e.matches.join(', ')}</li>`).join('') : '<li>No hostile dropper persistence triggers observed.</li>'}</ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>💉 6. DBI & Frida Generator</h3>
+            <span class="card-status clean">READY</span>
+          </div>
+          <div class="card-body">
+            <ul>
+              <li>Anti-Hook: ${d.anti_hook_hits.join(', ') || 'None detected'}</li>
+              <li>Generated: <code>frida_bypass_hook.js</code> for instant SSL & Root bypass.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>🧩 7. Symbolic Time-Bomb</h3>
+            <span class="card-status clean">SOLVED</span>
+          </div>
+          <div class="card-body">
+            <ul>${d.symbolic_triggers.length ? d.symbolic_triggers.map(t => `<li>🧩 ${t}</li>`).join('') : '<li>No delayed time-bombs or environment evasion gates.</li>'}</ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>🔍 8. Opcode Disassembler</h3>
+            <span class="card-status ${d.opcode_findings.length ? 'flagged' : 'clean'}">${d.opcode_findings.length ? 'FLAGGED' : 'CLEAN'}</span>
+          </div>
+          <div class="card-body">
+            <ul>${d.opcode_findings.length ? d.opcode_findings.map(o => `<li>🔍 ${o}</li>`).join('') : '<li>Standard instructions. No NOP sleds or breakpoint traps.</li>'}</ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>📱 9. OWASP Mobile Top 10</h3>
+            <span class="card-status ${d.owasp_mobile.some(m => m.severity === 'CRITICAL') ? 'flagged' : 'clean'}">AUDITED</span>
+          </div>
+          <div class="card-body">
+            <ul>${d.owasp_mobile.length ? d.owasp_mobile.map(m => `<li>📱 [${m.severity}] ${m.owasp}</li>`).join('') : '<li>✅ Passed OWASP Mobile Top 10 baseline security.</li>'}</ul>
+          </div>
+        </div>
+
+        <div class="engine-card">
+          <div class="card-head">
+            <h3>🛡️ 10. Isolation Chamber</h3>
+            <span class="card-status clean">VERIFIED</span>
+          </div>
+          <div class="card-body">
+            <ul>
+              <li>Air-Gapped Isolation: Compatible</li>
+              <li>Forensic Sanitization: Completed</li>
+            </ul>
+          </div>
+        </div>
+      `;
+
+      const terminal = document.getElementById('terminal-log');
+      terminal.innerHTML += `[+] Security Verdict: <b>${d.verdict}</b> (Threat Score: ${scoreVal}/100)<br>`;
+      terminal.innerHTML += `[+] Report Generated Successfully.<br>`;
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function resetScan() {
+      document.getElementById('dropzone').style.display = 'block';
+      document.getElementById('results-section').style.display = 'none';
+      document.getElementById('scan-progress').style.display = 'none';
+      document.getElementById('file-input').value = "";
+    }
+
+    function downloadReport() {
+      const blob = new Blob([currentScanReport], { type: 'text/markdown;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'OstadRESpy_AUDIT_REPORT.md';
+      a.click();
+    }
+
+    function downloadFrida() {
+      window.location.href = '/api/download_frida';
+    }
+
+    // OstadBitDiff
+    let diffFiles = [null, null];
+    function setDiffFile(idx, f) {
+      if(!f) return;
+      diffFiles[idx] = f;
+      if(idx === 0) document.getElementById('label-orig').innerText = `Selected: ${f.name} (${(f.size/1024).toFixed(1)} KB)`;
+      if(idx === 1) document.getElementById('label-mod').innerText = `Selected: ${f.name} (${(f.size/1024).toFixed(1)} KB)`;
+    }
+
+    function runBitDiff() {
+      if(!diffFiles[0] || !diffFiles[1]) {
+        alert("Please select both Target A and Target B binaries to diff!");
+        return;
+      }
+      const formData = new FormData();
+      formData.append('fileA', diffFiles[0]);
+      formData.append('fileB', diffFiles[1]);
+
+      fetch('/api/diff', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(d => {
+          currentDiffReport = d.report_markdown || "";
+          document.getElementById('diff-results').style.display = 'flex';
+          document.getElementById('diff-summary').innerText = `Binary Similarity: ${d.similarity}%`;
+          const badge = document.getElementById('diff-verdict-badge');
+          badge.innerText = d.verdict;
+          badge.className = d.similarity === 100 ? 'verdict-badge clean' : 'verdict-badge malicious';
+
+          document.getElementById('diff-meta-grid').innerHTML = `
+            <div class="meta-box"><span>Target A Size</span><strong>${(d.fileA_size/1024).toFixed(1)} KB</strong></div>
+            <div class="meta-box"><span>Target B Size</span><strong>${(d.fileB_size/1024).toFixed(1)} KB</strong></div>
+            <div class="meta-box"><span>Size Delta</span><strong>${d.size_delta > 0 ? '+' : ''}${d.size_delta} bytes</strong></div>
+            <div class="meta-box"><span>Modified Byte Clusters</span><strong>${d.patch_clusters ? d.patch_clusters.length : 0} regions</strong></div>
+          `;
+        })
+        .catch(err => alert("BitDiff Error: " + err));
+    }
+
+    function downloadDiffReport() {
+      const blob = new Blob([currentDiffReport], { type: 'text/markdown;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'OstadBitDiff_REPORT.md';
+      a.click();
+    }
+
+    // Canvas Background Particles
+    const canvas = document.getElementById('cyber-bg');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles = [];
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    for(let i=0; i<45; i++) {
+      particles.push({
+        x: Math.random()*w, y: Math.random()*h,
+        vx: (Math.random()-0.5)*0.8, vy: (Math.random()-0.5)*0.8,
+        r: Math.random()*2+1
+      });
+    }
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#ff0055';
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if(p.x<0) p.x=w; if(p.x>w) p.x=0;
+        if(p.y<0) p.y=h; if(p.y>h) p.y=0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>

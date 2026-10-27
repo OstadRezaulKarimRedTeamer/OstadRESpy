@@ -1,0 +1,192 @@
+<manifest versionCode="104" versionName="2.0.0" compileSdkVersion="36" compileSdkVersionCodename="16" requiredSplitTypes="base__abi,base__density" splitTypes="" package="com.alfafaa.android" platformBuildVersionCode="36" platformBuildVersionName="16">
+  <uses-sdk minSdkVersion="32" targetSdkVersion="36">
+  </uses-sdk>
+  <uses-permission name="android.permission.CAMERA">
+  </uses-permission>
+  <uses-feature name="android.hardware.camera" required="false">
+  </uses-feature>
+  <uses-feature name="android.hardware.camera.autofocus" required="false">
+  </uses-feature>
+  <uses-permission name="android.permission.INTERNET">
+  </uses-permission>
+  <uses-permission name="android.permission.ACCESS_NETWORK_STATE">
+  </uses-permission>
+  <uses-permission name="android.permission.POST_NOTIFICATIONS">
+  </uses-permission>
+  <uses-permission name="android.permission.ACCESS_COARSE_LOCATION">
+  </uses-permission>
+  <uses-permission name="android.permission.ACCESS_FINE_LOCATION">
+  </uses-permission>
+  <uses-permission name="android.permission.WRITE_EXTERNAL_STORAGE" maxSdkVersion="28">
+  </uses-permission>
+  <uses-permission name="android.permission.USE_BIOMETRIC">
+  </uses-permission>
+  <uses-permission name="android.permission.USE_FINGERPRINT">
+  </uses-permission>
+  <uses-permission name="android.permission.WAKE_LOCK">
+  </uses-permission>
+  <uses-permission name="com.google.android.c2dm.permission.RECEIVE">
+  </uses-permission>
+  <permission name="com.alfafaa.android.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" protectionLevel="0x2">
+  </permission>
+  <uses-permission name="com.alfafaa.android.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION">
+  </uses-permission>
+  <application theme="@0x01030241" label="@0x7f110020" icon="@0x7f0e0000" name="com.pairip.application.Application" allowBackup="true" supportsRtl="true" extractNativeLibs="false" roundIcon="@0x7f0e0001" appComponentFactory="androidx.core.app.CoreComponentFactory">
+    <meta-data name="firebase_crashlytics_collection_enabled" value="false">
+    </meta-data>
+    <activity name="com.alfafaa.android.MainActivity" exported="true" launchMode="2" configChanges="0x40003ff4" windowSoftInputMode="0x10">
+      <intent-filter>
+        <action name="android.intent.action.MAIN">
+        </action>
+        <category name="android.intent.category.LAUNCHER">
+        </category>
+      </intent-filter>
+      <intent-filter autoVerify="true">
+        <action name="android.intent.action.VIEW">
+        </action>
+        <category name="android.intent.category.DEFAULT">
+        </category>
+        <category name="android.intent.category.BROWSABLE">
+        </category>
+        <data scheme="https" host="alfafaa.com">
+        </data>
+      </intent-filter>
+      <intent-filter>
+        <action name="android.intent.action.VIEW">
+        </action>
+        <category name="android.intent.category.DEFAULT">
+        </category>
+        <category name="android.intent.category.BROWSABLE">
+        </category>
+        <data scheme="alfafaa">
+        </data>
+      </intent-filter>
+    </activity>
+    <meta-data name="com.google.firebase.messaging.default_notification_channel_id" value="@0x7f1100d7">
+    </meta-data>
+    <meta-data name="com.google.firebase.messaging.default_notification_icon" resource="@0x7f0800ca">
+    </meta-data>
+    <meta-data name="com.google.firebase.messaging.default_notification_color" resource="@0x7f060062">
+    </meta-data>
+    <service name="com.alfafaa.android.AlfafaaMessagingService" exported="false">
+      <intent-filter>
+        <action name="com.google.firebase.MESSAGING_EVENT">
+        </action>
+      </intent-filter>
+    </service>
+    <service name="androidx.credentials.playservices.CredentialProviderMetadataHolder" enabled="true" exported="false">
+      <meta-data name="androidx.credentials.CREDENTIAL_PROVIDER_KEY" value="androidx.credentials.playservices.CredentialProviderPlayServicesImpl">
+      </meta-data>
+    </service>
+    <activity theme="@0x7f12012e" name="androidx.credentials.playservices.HiddenActivity" enabled="true" exported="false" configChanges="0x5a0" fitsSystemWindows="true">
+    </activity>
+    <activity theme="@0x7f12012e" name="androidx.credentials.playservices.IdentityCredentialApiHiddenActivity" enabled="true" exported="false" configChanges="0x5a0" fitsSystemWindows="true">
+    </activity>
+    <activity theme="@0x01030010" name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity" exported="false" excludeFromRecents="true">
+    </activity>
+    <service name="com.google.android.gms.auth.api.signin.RevocationBoundService" permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION" exported="true" visibleToInstantApps="true">
+    </service>
+    <receiver name="com.google.firebase.iid.FirebaseInstanceIdReceiver" permission="com.google.android.c2dm.permission.SEND" exported="true">
+      <intent-filter>
+        <action name="com.google.android.c2dm.intent.RECEIVE">
+        </action>
+      </intent-filter>
+      <meta-data name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED" value="true">
+      </meta-data>
+    </receiver>
+    <service name="com.google.firebase.messaging.FirebaseMessagingService" exported="false" directBootAware="true">
+      <intent-filter priority="-500">
+        <action name="com.google.firebase.MESSAGING_EVENT">
+        </action>
+      </intent-filter>
+    </service>
+    <service name="com.google.firebase.components.ComponentDiscoveryService" exported="false" directBootAware="true">
+      <meta-data name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.crashlytics.FirebaseCrashlyticsKtxRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.crashlytics.CrashlyticsRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.sessions.FirebaseSessionsRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+      <meta-data name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar" value="com.google.firebase.components.ComponentRegistrar">
+      </meta-data>
+    </service>
+    <activity theme="@0x01030010" name="com.google.android.gms.common.api.GoogleApiActivity" exported="false">
+    </activity>
+    <service name="com.google.firebase.sessions.SessionLifecycleService" enabled="true" exported="false">
+    </service>
+    <provider name="com.google.firebase.provider.FirebaseInitProvider" exported="false" authorities="com.alfafaa.android.firebaseinitprovider" initOrder="100" directBootAware="true">
+    </provider>
+    <provider name="org.jetbrains.compose.resources.AndroidContextProvider" enabled="true" exported="false" authorities="com.alfafaa.android.resources.AndroidContextProvider">
+    </provider>
+    <provider name="androidx.startup.InitializationProvider" exported="false" authorities="com.alfafaa.android.androidx-startup">
+      <meta-data name="androidx.emoji2.text.EmojiCompatInitializer" value="androidx.startup">
+      </meta-data>
+      <meta-data name="androidx.lifecycle.ProcessLifecycleInitializer" value="androidx.startup">
+      </meta-data>
+      <meta-data name="androidx.profileinstaller.ProfileInstallerInitializer" value="androidx.startup">
+      </meta-data>
+    </provider>
+    <activity name="androidx.compose.ui.tooling.PreviewActivity" exported="true">
+    </activity>
+    <uses-library name="androidx.window.extensions" required="false">
+    </uses-library>
+    <uses-library name="androidx.window.sidecar" required="false">
+    </uses-library>
+    <meta-data name="com.google.android.gms.version" value="@0x7f0b0006">
+    </meta-data>
+    <receiver name="androidx.profileinstaller.ProfileInstallReceiver" permission="android.permission.DUMP" enabled="true" exported="true" directBootAware="false">
+      <intent-filter>
+        <action name="androidx.profileinstaller.action.INSTALL_PROFILE">
+        </action>
+      </intent-filter>
+      <intent-filter>
+        <action name="androidx.profileinstaller.action.SKIP_FILE">
+        </action>
+      </intent-filter>
+      <intent-filter>
+        <action name="androidx.profileinstaller.action.SAVE_PROFILE">
+        </action>
+      </intent-filter>
+      <intent-filter>
+        <action name="androidx.profileinstaller.action.BENCHMARK_OPERATION">
+        </action>
+      </intent-filter>
+    </receiver>
+    <service name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery" exported="false">
+      <meta-data name="backend:com.google.android.datatransport.cct.CctBackendFactory" value="cct">
+      </meta-data>
+    </service>
+    <service name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService" permission="android.permission.BIND_JOB_SERVICE" exported="false">
+    </service>
+    <receiver name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver" exported="false">
+    </receiver>
+    <activity theme="@0x7f12012f" name="com.google.android.play.core.common.PlayCoreDialogWrapperActivity" exported="false" stateNotNeeded="true">
+    </activity>
+    <activity name="com.pairip.licensecheck.LicenseActivity" exported="false">
+    </activity>
+    <meta-data name="com.android.vending.splits.required" value="true">
+    </meta-data>
+    <meta-data name="com.android.stamp.source" value="https://play.google.com/store">
+    </meta-data>
+    <meta-data name="com.android.stamp.type" value="STAMP_TYPE_DISTRIBUTION_APK">
+    </meta-data>
+    <meta-data name="com.android.vending.splits" resource="@0x7f130000">
+    </meta-data>
+    <meta-data name="com.android.vending.derived.apk.id" value="4">
+    </meta-data>
+  </application>
+  <uses-permission name="com.android.vending.CHECK_LICENSE">
+  </uses-permission>
+</manifest>
